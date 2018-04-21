@@ -19,14 +19,33 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
-    <!-- Google's CDN for jQuery 3.3.1 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-
 </head>
 
 <body>
 
+    <!-- Row of buttons for topics -->
+    <div id="treatButtons" class="container"></div>
+
+    <!-- Form for adding topics -->
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-3">
+                <form id="treat-form">
+                    <label for="treat-input">Add a treat</label>
+                    <input type="text" id="treat-input">
+                    <br>
+                    <input type="submit" id="addTreat" value="Submit">
+                </form>
+            </div>
+
+
+            <div class="col-xs-12 col-md-9">
+                <div id="treats"></div>
+            </div>
+        </div>
+    </div>
+    <!-- load local js file -->
+    <script src="assets/javascript/script.js"></script>
 </body>
 
 </html>
