@@ -15,7 +15,7 @@ $(document).ready(function () {
         "marshmallow",
         "pie"
     ];
-    console.log("topics: " + topics)
+    console.log("topics: " + topics);
 
     // Define a function to generate buttons from topics array (to be called both at page load and after adding buttons through form. 
     function generateButtons() {
@@ -26,66 +26,82 @@ $(document).ready(function () {
     }; /* End definition of generateButtons function */
 
     // Calling generateButtons function on page load
-    generateButtons()
+    generateButtons();
 
+    // Event is clicking the topic. It puts content into 
     $("button").on("click", function () {
 
         // Clears the #treats div before populating it with new gifs
         $("#treats").empty();
+        $("<div>").appendTo("#treats").addClass("col-xs-4").attr("id", "col0");
+        $("<p>").appendTo("#col0").attr("id", "p0");
+        $("<img>").appendTo("#col0").addClass("img-responsive").attr("id", "img0");
+        $("<div>").appendTo("#treats").addClass("col-xs-4").attr("id", "col1");
+        $("<p>").appendTo("#col1").attr("id", "p1");
+        $("<img>").appendTo("#col1").addClass("img-responsive").attr("id", "img1");
+        $("<div>").appendTo("#treats").addClass("col-xs-4").attr("id", "col2");
+        $("<p>").appendTo("#col2").attr("id", "p2");
+        $("<img>").appendTo("#col2").addClass("img-responsive").attr("id", "img2");
 
-        // Defines and logs the url for the query from the Giphy API
-        var queryURL = "https://api.giphy.comv/v1/gifs/search?api_key=+Bk0gJvP8J1hf0LAggvKMSd7E86pBG6PB&limit=20&q=" + topic
-        console.log("queryURL: " + queryURL)
+        // Add #activeButton to the button, to be removed before end of event. I need to do this to grab the text from the button
 
-        $.ajax({
-            url: queryURL,
-            method: "GET"
-        }).then(function (gif) {
-            console.log("gif: " + gif)
-            for (var i = 0; i < gif.length; i++) {
+        var topic = $(this).text();
 
-                // Stores url of still gif
-                var gifImageStill = response.data[i].images.original_still.url;
+    // Defines and logs the url for the query from the Giphy API
+    var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=Bk0gJvP8J1hf0LAggvKMSd7E86pBG6PB&limit=3&q=" + topic
+    console.log("queryURL: " + queryURL);
 
-                // Stores url of animated gif
-                var gifImageAnimate = response.data[i].images.original.url;
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function (response) {
+        console.log("response.data.length: " + response.data.length);
 
-                // Stores gif rating
-                var gifImageRating = response.data[i].rating;
+        // Loops through results to generate page
+        for (var i = 0; i < response.data.length; i++) {
 
+            // Stores and logs url of still gif
+            var gifImageStill = response.data[i].images.original_still.url;
+            console.log("gifImageStill URL: " + gifImageStill);
 
-                var gifImage = $('<img class="gif img-thumbnail">').attr("src", gifImageStill).attr("data-animate", gifImageAnimate).attr("data-still", gifImage_Still).attr("data-state", "still");
-                var gifRating = $('<p class="gifParagraph"<span>>').text('Gif Rating: ' + rating);
-                var gifDiv = $('<div class="gifDiv">').append(gif, gifRating);
-                var colDiv = $('<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"></div>').append(gifDiv);
-                $('.row').prepend(colDiv);
-            }
+            // Stores url of animated gif
+            var gifImageAnimate = response.data[i].images.original.url;
+            console.log("gifImageAnimate URL: " + gifImageAnimate);
 
-        });
-    }); /* End defining what happens on clicking topics */
+            // Stores gif rating
+            var gifImageRating = response.data[i].rating;
+            console.log("gifImageRating: " + gifImageRating);
 
-    // Defines the form button pushing new topic to button list
-    $("#addTreat").on("click", function (event) {
-        event.preventDefault();
+            $("#p" + i).text(gifImageRating)
+            $("#img" + i).attr("src", gifImageStill)
 
-        // This line grabs the input from the textbox
-        var treat = $("#treat-input").val().trim();
-        topics.push(treat);
+        };
 
-        // Calls generateButtons function
-        generateButtons();
     });
+}); /* End defining what happens on clicking topics */
 
-    // Starts and stops gif animations on clicks
-    $(".gif").on("click", function () {
-        var state = $(this).attr("data-state");
-        if (state === "still") {
-            $(this).attr("src", $(this).attr("data-animate"));
-            $(this).attr("data-state", "animate");
-        } else {
-            $(this).attr("src", $(this).attr("data-still"));
-            $(this).attr("data-state", "still");
-        }
-    }); /* End of start and stop animations */
+// Defines the form button pushing new topic to button list
+$("#addTreat").on("click", function (event) {
+    event.preventDefault();
+
+    // This line grabs the input from the textbox
+    var treat = $("#treat-input").val().trim();
+    topics.push(treat);
+
+    // Calls generateButtons function
+    generateButtons();
+});
+
+// Starts and stops gif animations on clicks
+$("img").on("click", function () {
+    var state = $(this).attr("data-state");
+    if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+    } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+    }
+}); /* End of start and stop animations */
 
 }) /* End of document ready function */
