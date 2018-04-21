@@ -87,8 +87,9 @@ $(document).ready(function () {
                         $(this).attr("data-state", "still");
                     }
                 }); /* End of start and stop animations */
-            };
 
+            }; /* End gif generation loop */
+            
         });
 
     }); /* End defining what happens on clicking topics */
