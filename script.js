@@ -29,26 +29,16 @@ $(document).ready(function () {
     generateButtons();
 
     // Event is clicking the topic. It puts content into 
-    $("button").on("click", function () {
+    $(document).on("click", "button", function () {
 
         // Clears the #treats div before populating it with new gifs
         $("#treats").empty();
-        $("<div>").appendTo("#treats").addClass("col-xs-4").attr("id", "col0");
-        $("<p>").appendTo("#col0").attr("id", "p0");
-        $("<img>").appendTo("#col0").addClass("img-responsive").attr("id", "img0");
-        $("<div>").appendTo("#treats").addClass("col-xs-4").attr("id", "col1");
-        $("<p>").appendTo("#col1").attr("id", "p1");
-        $("<img>").appendTo("#col1").addClass("img-responsive").attr("id", "img1");
-        $("<div>").appendTo("#treats").addClass("col-xs-4").attr("id", "col2");
-        $("<p>").appendTo("#col2").attr("id", "p2");
-        $("<img>").appendTo("#col2").addClass("img-responsive").attr("id", "img2");
 
-        // Add #activeButton to the button, to be removed before end of event. I need to do this to grab the text from the button
-
+        // topic becomes assigned to the text of the button
         var topic = $(this).text();
 
         // Defines and logs the url for the query from the Giphy API
-        var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=Bk0gJvP8J1hf0LAggvKMSd7E86pBG6PB&limit=3&q=" + topic
+        var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=Bk0gJvP8J1hf0LAggvKMSd7E86pBG6PB&limit=10&q=" + topic
         console.log("queryURL: " + queryURL);
 
         $.ajax({
@@ -75,8 +65,23 @@ $(document).ready(function () {
                 $("#p" + i).text(gifImageRating);
                 $("#img" + i).attr("src", gifImageStill).attr("data-animate", gifImageAnimate).attr("data-still", gifImageStill).attr("data-state", "still");
 
+                //Declare variable to hold initial div
+                var imgContainer = $("<div>");
+
+                var imgTag = $("<img />")
+                    .attr("src", gifImageStill)
+                    .attr("alt", topic + " image " + i)
+                    .attr("data-state", "still")
+                    .attr("data-still", gifImageStill)
+                    .attr("data-animate", gifImageAnimate)
+                    .addClass("img-treat");
+
+                imgContainer.append(imgTag);
+
+                $("#treats").append(imgContainer);
+
                 // Starts and stops gif animations on clicks
-                $("#treats").on("click", ".img-responsive", function () {
+                $("#treats").on("click", ".img-treat", function () {
                     console.log("gif clicked");
                     var state = $(this).attr("data-state");
                     if (state === "still") {
